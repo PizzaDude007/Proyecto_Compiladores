@@ -1,4 +1,4 @@
-#ifndef PARSER_h
+#ifndef PARSER_H
 #define PARSER_H
 #include "Lexer.h"
 #include <string>
@@ -32,13 +32,8 @@ namespace C_1{
             void factor();
             void eat(int t);
             void error(string msg);
-    }
-    
-
-    Parser::~ Parser()
-    { 
-        
-    }
+            void parse();  //???
+    };
 }//name space
 
 
