@@ -4,6 +4,7 @@
 #include <map>
 #include <stack>
 #include <vector>
+#include  <iostream>
 using namespace std;
 #include "Symbol.h"
 #include "Production.h"

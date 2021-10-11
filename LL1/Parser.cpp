@@ -271,19 +271,22 @@ void Parser::loadTable(){
 
 int Parser::parse(){
     stack<Symbol> pila;
-    
-    token = lexer->yylex();
-    pila.push(syms[15]);
+    pila.push(syms[15]);    
     pila.push(syms[0]);
-    cout<<pila.top().getName()<<endl;
-    while (pila.top().getName()!="$")
-    {
-
-        if (pila.top().getName() == lexer->getYytext()){
-
-        }else if(pila.top().getType() == terminal){
-
-
+    int val = 0;
+    string w = lexer->getYytext();
+    char p = w[0]; //PRIMER CARACTER DE OMEGA
+    string ps(1,p);
+    Symbol X = pila.top(); //CIMA DE LA PILA
+    w += "$";
+    while (X.getName()!="$"){
+        
+        if (X.getName().compare(ps) == 0){
+            pila.pop();
+            val++;
+            p = w[val];
+        }else if(X.getType() == terminal && X!=p){
+           
         }else if (pila.top().getType() == noterminal ){
 
             
