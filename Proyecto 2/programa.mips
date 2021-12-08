@@ -1,0 +1,22 @@
+    .data
+str0 : .ascii "Hola mundo"
+1: .ascii "Esto es una cadena"
+a: .float 0.0
+b: .float 0.0
+cteFloat1: .float 3.2
+cteFloat2: .double 5.3
+
+    .text
+li $t2, 3
+la $t0, cteFloat1
+ls. $f0, ($t0)
+
+la $t0, a
+l.s $f0, ($t0)
+s.s $f0, b
+
+
+
+
+
+
