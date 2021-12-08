@@ -2,6 +2,11 @@
 #include <iostream>
 #include <sstream>
 
+constexpr unsigned int str2int(const char* str, int h = 0) //cambiar string a int
+{
+    return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
+}
+
 Driver::Driver(){
     std::map <std::string, SymTab> TSglobal; // tabla global
     pilaTS.push_back(TSglobal);
@@ -11,6 +16,22 @@ Driver::Driver(){
 int Driver::agregar_tipo(std::string nombre, int tam_bytes, SymTab *tipo_base){
     tt.addType(contType++, nombre,tam_bytes , tipo_base);
 }
+
+void Driver::crear_ambito(){
+    SymTab *ts = new SymTab();
+    //pilaTS.push(ts); //insertar en pila (que es mapa)
+    pilaDir.push(dir);
+    dir = 0;
+    pilaTemporal.push(numTemporales);
+    numTemporales = 0;
+    delete ts;
+    
+}
+
+void Driver::destruir_ambito(){
+
+}
+
 
 void Driver::agregar_simbolo(std::string id, int tipo, std::string categoria){ 
     SymTab nuevoSimbolo;
@@ -93,6 +114,7 @@ bool Driver::compatibles(int t1, int t2){
 
 Expresion Driver::numero(std::string val, int tipo){ //Para constantes o double
     Expresion e; //como devuelve? 
+    //[usar Expresion en lugar de Numero]
     Numero num;
     if(tipo == 3){ // flotante
         //doble o flotante
@@ -386,6 +408,8 @@ void Driver::gen_imprimir(string val){
         case str2int("(float)"):
         case str2int("(int)"):
             cout<<q->resultado<<"="<<q->operador<<q->arg1<<endl;
+        case str2int("scan"):
+            cout<<"scan "<<q->resultado<<endl;
             break;
         } 
 
@@ -393,9 +417,14 @@ void Driver::gen_imprimir(string val){
     cout<<endl;    
 }
 
-void gen_lectura(string dir){
+void Driver::gen_lectura(string dir){
     //Leyendo 7u7
-
+    Cuadrupla c1 = nuevaCuadrupla("", "scan", "", dir); 
+    codigo_intermedio.push_back(c1);
+/*  c1.arg1 ;
+    c1.operador = "scan"; // a partir de este se genera el codigo intermedio.
+    c1.arg2 = ""; 
+    c1.resultado = dir; */
     // li $v0, 5
     // la $t0, dir
     // syscall
@@ -431,17 +460,14 @@ void Driver::gen_if(string var, string ltrue, string lfalse){
     codigo_intermedio.push_back(c2);  
 }
 
-/*struct Cuadrupla nuevaCuadrupla(string arg1, string arg2, string operador, string resultado){
+struct Cuadrupla Driver::nuevaCuadrupla(string arg1, string arg2, string operador, string resultado){
     Cuadrupla temp;
     temp.arg1 = arg1;
     temp.arg2 = arg2;
     temp.operador = operador;
     temp.resultado = resultado;
     return temp;
-}*/
-
-constexpr unsigned int str2int(const char* str, int h = 0) //cambiar string a int
-{
-    return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
 }
+
+
 

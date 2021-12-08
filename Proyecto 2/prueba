@@ -1,10 +1,19 @@
 int a , b ;
 float _f ;
+char g = 'a';
 
 if ( a + b )
 {
     a = 3 + 8 ;
+    _f = 7.9f;
+    _f = 7.9;
 } else
 {
-    b = 0 ;
+    b = "hola" ;
 }
+
+struct {
+    float flo1;
+    int ent1;
+    char cara1;
+};

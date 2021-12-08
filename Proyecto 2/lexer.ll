@@ -18,11 +18,13 @@ using namespace std;
 ESP ([ \t\n\r])+
 ID [a-zA-Z_]([a-zA-Z0-9_])*
 ENTEROS ([0-9])+
-FLOTANTES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?
-CADENA  (\")([^\"])*(\")
+FLOTANTES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?f
+CADENA (\")([\x20\x21\x23-\x7F])*(\")
+CARACTER (\')([\x20\x21\x23-\x7F\t\n\r])(\')
+DOBLES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?
 %%
 
-"char" { return CARACTER; }
+"char" { return CHAR; }
 "int" { return ENTERO; }
 "float" { return FLOTANTE; }
 "double" { return NUM_DOBLE; }
@@ -61,8 +63,10 @@ CADENA  (\")([^\"])*(\")
 {ID} { return IDENTIFICADOR; }
 {ESP} {  }
 {ENTEROS} { return NUMERO; }
-{FLOTANTES} { return NUMERO; }
+{FLOTANTES} { return FLOTANTES; }
+{DOBLES} { return DOBLES; }
 {CADENA} { return CARACTERES; }
+{CARACTER} { return CARACTER; }
 .  { cout<<"ERROR LEXICO "<<yytext<<endl;}  
 
 %%

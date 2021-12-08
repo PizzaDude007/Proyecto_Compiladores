@@ -31,7 +31,12 @@ struct SymTab{
     std::string cat;
     std::vector<int> args=vector<int>();
 };
-
+//
+class PilaTS{
+    private:
+        vector<SymTab*> datos;
+};
+//
 class Driver{
 private:
     TypeTab tt;
@@ -99,7 +104,11 @@ public:
     void gen_goto(string label);
     void gen_if(string var, string ltrue, string lfalse);
 
-    
+    void Driver::crear_ambito();
+    void Driver::destruir_ambito();
+
+    struct Cuadrupla nuevaCuadrupla(string arg1, string arg2, string operador, string resultado);
+    //constexpr unsigned int str2int(const char* str, int h = 0);
 
 };
 

@@ -2,7 +2,7 @@
 #define TOKENS_H
 
 const int $ = 0;
-const int CARACTER = 1;
+const int CHAR = 1;
 const int ENTERO = 2;
 const int FLOTANTE = 3;
 const int NUM_DOBLE = 4;
@@ -39,4 +39,8 @@ const int IGUALDAD = 34;
 const int DIFERENTE = 35;
 const int MAYOR_IGUAL= 36;
 const int MENOR_IGUAL = 37;
+const int NEGACION = 38;
+const int CARACTER = 39;
+const int DOBLES = 40;
+const int FLOTANTES = 41;
 #endif
