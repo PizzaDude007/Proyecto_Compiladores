@@ -3,26 +3,36 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include "SymTab.hpp"
+
 using namespace std;
 
-#include "Type.hpp"
 
-class TypeTab 
-{
+
+struct Type {
+    string name;
+    int tam;
+    SymTab *tipoBase = NULL;
+    //int items; // Tal vez para arreglos
+    
+};
+
+class TypeTab {
 private:
     map<int,Type> types;
 public:
+    // constructor
     TypeTab(/* args */);
     ~TypeTab();
+    //agregar tipos nativos
     void addType(int id, string name, int tam);
-    void addType(int id, string name, int items,  int base);
-    void addType(int id, string name, SymTab *tab);
+    //agregar structs
     void addType(int id, string name, int tam ,SymTab *tab);
-    int getTam(int id);
-    int getItems(int id);
-    SymTab *getTab(int id);
-    int getBase(int id);
     string getNombre(int id);
+    int getTam(int id);
+    SymTab *getTipoBase(int id);
+    
 };
 
 #endif // !__TYPETAB_HPP__
