@@ -2,7 +2,6 @@
 #include <iostream>
 #include <sstream>
 
-<<<<<<< HEAD
 /* String To int
 *  Metodo para mapear un valor de string a un entero para hacer 
 *  las comparaciones que se requieran
@@ -12,9 +11,6 @@ constexpr unsigned int str2int(const char* str, int h = 0) //cambiar string a in
 {
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
 }
-=======
-
->>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
 
 /* Driver
 * Metodo constructor de la clase Driver
@@ -135,21 +131,9 @@ string Driver::nuevaTemporal(){
     return temp.str();
 }
 
-<<<<<<< HEAD
-/*
-*
-*/
-void Driver::funcion(){//? para que 
-    
-
-}
-
-
 /* Asignación
 *  Iguala el valor de una expreision a un id declarado previamente
 */
-=======
->>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
 Expresion Driver::asignacion(std::string id, Expresion e){
     Expresion e1;
     string alfa;
@@ -275,12 +259,7 @@ Expresion Driver::suma(Expresion o1, Expresion o2){
 */
 Expresion Driver::mul(Expresion e1, Expresion e2){
     Expresion e;
-<<<<<<< HEAD
     e.tipo = maximo(e1.tipo, e2.tipo);
-=======
-    
-    e.tipo = max(e1.tipo, e2.tipo);
->>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
     if(e.tipo!=-1){
         e.dir=nuevaTemporal();
         string alfa1 = ampliar(e1.dir, e1.tipo, e.tipo);
@@ -302,16 +281,10 @@ Expresion Driver::resta(Expresion o1, Expresion o2){
 
     if (exp.tipo != -1){                // Si los tipos no coinciden
         exp.dir = nuevaTemporal();
-<<<<<<< HEAD
         string str1 = ampliar(o1.dir,o1.tipo,exp.tipo); // Amplia el tipo de la expresion 1, para que sean compatibles
         string str2 = ampliar(o2.dir, o2.tipo, exp.tipo); // Amplia el tipo de expresion 2, para ser compatible
-        //genCode(exp.dir, str1, "-", str2);
-=======
-        string str1 = ampliar(o1.dir,o1.tipo,exp.tipo);
-        string str2 = ampliar(o2.dir, o2.tipo, exp.tipo);
         codigo_intermedio.push_back(nuevaCuadrupla(str1,str2,"-",exp.dir));
 
->>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
     }else{
         error_semantico("Tipos Incompatibles");
     }
@@ -589,43 +562,43 @@ void Driver::error_semantico(std::string mensaje){
 */
 void Driver::gen_imprimir(string val){
     
-    // for(vector<Cuadrupla>::iterator q = codigo_intermedio.begin(); q != codigo_intermedio.end(); q++)
-    // {
-    //     //string operador = *q.operador;
-    //     int compare = str2int((*q).operador.c_str());
-    //     switch(compare){
-    //     case str2int("+"): 
-    //     case str2int("-"):
-    //     case str2int("*"):
-    //     case str2int("/"):
-    //         cout<<q->resultado<<"="<<q->arg1<<q->operador<<q->arg2<<endl;
-    //         break;
-    //     case str2int("if"):
-    //         cout<<q->operador<<" "<<q->arg1<<" goto "<<q->resultado<<endl;
-    //         break;
-    //     case str2int("goto"):
-    //         cout<<q->operador<<" "<<q->resultado<<endl;
-    //         break;
-    //     case str2int("="):
-    //         cout<<q->resultado<<q->operador<<q->arg1<<endl;
-    //         break;
-    //     case str2int("label"):
-    //         cout<<q->resultado<<":";
-    //         break;
-    //     case str2int("(float)"):
-    //     case str2int("(int)"):
-    //         cout<<q->resultado<<"="<<q->operador<<q->arg1<<endl;
-    //     case str2int("scan"):
-    //         cout<<"scan "<<q->resultado<<endl;
-    //         break;
-    //     } 
+    for(vector<Cuadrupla>::iterator q = codigo_intermedio.begin(); q != codigo_intermedio.end(); q++)
+    {
+        //string operador = *q.operador;
+        int compare = str2int((*q).operador.c_str());
+        switch(compare){
+        case str2int("+"): 
+        case str2int("-"):
+        case str2int("*"):
+        case str2int("/"):
+            cout<<q->resultado<<"="<<q->arg1<<q->operador<<q->arg2<<endl;
+            break;
+        case str2int("if"):
+            cout<<q->operador<<" "<<q->arg1<<" goto "<<q->resultado<<endl;
+            break;
+        case str2int("goto"):
+            cout<<q->operador<<" "<<q->resultado<<endl;
+            break;
+        case str2int("="):
+            cout<<q->resultado<<q->operador<<q->arg1<<endl;
+            break;
+        case str2int("label"):
+            cout<<q->resultado<<":";
+            break;
+        case str2int("(float)"):
+        case str2int("(int)"):
+            cout<<q->resultado<<"="<<q->operador<<q->arg1<<endl;
+        case str2int("scan"):
+            cout<<"scan "<<q->resultado<<endl;
+            break;
+        } 
 
-    // }
-    // cout<<endl;    
+    }
+    cout<<endl;    
 
 }
 
-/* Genrar lectura
+/* Generar lectura
 *  Metodo para generar el codigo intermedio de una lectura con scan 
 */
 void Driver::gen_lectura(string dir){
@@ -642,7 +615,7 @@ void Driver::gen_lectura(string dir){
 }
 
 /*  Generar etiqueta
-*  Metodo para agregar una nueva etiqueta en el codigo intermedio
+*   Metodo para agregar una nueva etiqueta en el codigo intermedio
 */
 
 string Driver::gen_label(string label){
@@ -651,8 +624,8 @@ string Driver::gen_label(string label){
     return label_l.str();    
 }
 
-/* Generar Go To
-* Metodo para generar un salto incondicional en el codigo intermedio
+/*  Generar Go To
+*   Metodo para generar un salto incondicional en el codigo intermedio
 */
 
 void Driver::gen_goto(string label){
