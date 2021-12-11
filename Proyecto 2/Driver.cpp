@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 
+<<<<<<< HEAD
 /* String To int
 *  Metodo para mapear un valor de string a un entero para hacer 
 *  las comparaciones que se requieran
@@ -11,14 +12,35 @@ constexpr unsigned int str2int(const char* str, int h = 0) //cambiar string a in
 {
     return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
 }
+=======
+
+>>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
 
 /* Driver
 * Metodo constructor de la clase Driver
 */
 
 Driver::Driver(){
-    std::map <std::string, SymTab> TSglobal; // tabla global
-    pilaTS.push_back(TSglobal);
+    // se agrega la tabla de simbolos global
+    SymTab *TSglobal= new SymTab(); // tabla global
+    pilaTS.push(TSglobal);
+
+    // instancia de pilas
+    pilaEtq=stack<string>();
+    pilaTemp= stack<int>();
+    pilaDir= stack<int>();
+
+
+    //valores iniciales
+    tipoRetorno=0;
+    tieneRetorno=false;
+    dir=0;
+    numEtiquetas=0;
+    numTemporales=0;
+    cteFloat=0;
+    cteDouble=0;
+    numLabel=0;
+    contType=0;
     
 }
 
@@ -27,7 +49,7 @@ Driver::Driver(){
 */
 
 int Driver::agregar_tipo(std::string nombre, int tam_bytes, SymTab *tipo_base){
-    tt.addType(contType++, nombre,tam_bytes , tipo_base);
+    Ttipos.addType(contType++, nombre,tam_bytes , tipo_base);
 }
 
 /* Crear ambito
@@ -35,10 +57,10 @@ int Driver::agregar_tipo(std::string nombre, int tam_bytes, SymTab *tipo_base){
 */
 void Driver::crear_ambito(){
     SymTab *ts = new SymTab();
-    //pilaTS.push(ts); //insertar en pila (que es mapa)
+    pilaTS.push(ts); //insertar en pila
     pilaDir.push(dir);
     dir = 0;
-    pilaTemporal.push(numTemporales);
+    pilaTemp.push(numTemporales);
     numTemporales = 0;
     delete ts;
 }
@@ -47,6 +69,17 @@ void Driver::crear_ambito(){
 *
 */
 void Driver::destruir_ambito(){
+    //recuperar valores de las pilas temporales y la dir global
+    
+    // se elimina la TS 
+    pilaTS.pop();
+    // se recupera el dir
+    dir= pilaDir.top();
+    pilaDir.pop();
+
+    // se recupera el num de temporales
+    numTemporales=pilaTemp.top();
+    pilaTemp.pop();
 
 }
 
@@ -56,13 +89,16 @@ void Driver::destruir_ambito(){
 * para la tabla de simbolos
 */
 void Driver::agregar_simbolo(std::string id, int tipo, std::string categoria){ 
-    SymTab nuevoSimbolo;
-    nuevoSimbolo.tipo=tipo;
-    nuevoSimbolo.cat=categoria;
-    nuevoSimbolo.dir=dir++;
     
-    map<string, SymTab> TS_top=pilaTS.back();
-    TS_top.insert({id,nuevoSimbolo});
+    SymTab *tablaSimbolo = pilaTS.top();
+
+    if (!tablaSimbolo->find(id)){
+        tablaSimbolo->addSym(id,tipo,dir++,categoria,vector<int>());
+    }else{
+        error_semantico("El id ["+id+"] que esta intentando agregar ya existe.");
+    }
+
+    
     
 }
  
@@ -71,13 +107,12 @@ void Driver::agregar_simbolo(std::string id, int tipo, std::string categoria){
 *  para la tabla de simbolos
 */
 void Driver::agregar_simbolo(std::string id, int tipo, std::vector<int> args){//Funciones
-    SymTab nuevoSimbolo;
-    nuevoSimbolo.tipo=tipo;
-    nuevoSimbolo.cat="func";
-    nuevoSimbolo.dir=dir++;
-    nuevoSimbolo.args=args;
-    map<string, SymTab> TS_top=pilaTS.back();
-    TS_top.insert({id,nuevoSimbolo});
+    SymTab *tablaSimbolo = pilaTS.top();
+    if (!tablaSimbolo->find(id)){
+        tablaSimbolo->addSym(id,tipo,dir++,"func",args);
+    }else{
+        error_semantico("El id ["+id+"] que esta intentando agregar ya existe.");
+    }
 }
 
 /*  Nueva Etiqueta
@@ -100,6 +135,7 @@ string Driver::nuevaTemporal(){
     return temp.str();
 }
 
+<<<<<<< HEAD
 /*
 *
 */
@@ -112,12 +148,14 @@ void Driver::funcion(){//? para que
 /* Asignación
 *  Iguala el valor de una expreision a un id declarado previamente
 */
+=======
+>>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
 Expresion Driver::asignacion(std::string id, Expresion e){
     Expresion e1;
     string alfa;
     //Validar que el id fue declarado
-    if(pilaTS.back().find(id) == pilaTS.back().end()) error_semantico("La variable "+id+" no fue declarada");
-    int typeId = pilaTS.back()[id].tipo;
+    if(!pilaTS.top()->find(id)) error_semantico("La variable "+id+" no fue declarada");
+    int typeId = pilaTS.top()->getType(id);
     e1.tipo = typeId; //La expresión de salida siempre tendrá el tipo del id
     if(typeId == e.tipo){
         alfa = e.dir;
@@ -144,12 +182,36 @@ Expresion Driver::asignacion(std::string id, Expresion e){
 *  de operadores
 */
 bool Driver::compatibles(int t1, int t2){
-    std::string nombre = tt.getNombre(t1);
-    std::string nombre2 = tt.getNombre(t2);
+    std::string nombre = Ttipos.getNombre(t1);
+    std::string nombre2 = Ttipos.getNombre(t2);
     if(nombre == "struct" && nombre2=="struct"){
-        //Validar la equivalencia de los compos de los tipos
-        //estructurados
-        // contar los tipos de estrcutura 1 y est 2 y si son los mismo, son equivalentes banda \:v/
+        map<string,Sym> ts1 = Ttipos.getTipoBase(t1)->getSyms();
+        map<string,Sym> ts2 = Ttipos.getTipoBase(t2)->getSyms();
+
+        map<string,Sym>::iterator it;
+
+        // contamos los tipos de ts1
+        int tipos1[6]={0,0,0,0,0,0};
+        for(it=ts1.begin(); it!= ts1.end();it++){
+            //incrementa el tipo al que pertenece
+            tipos1[it->second.tipo]++; 
+        }
+        
+        // contamos tipos de ts1
+        int tipos2[6]={0,0,0,0,0,0};
+        for(it=ts2.begin(); it!= ts2.end();it++){
+            //incrementa el tipo al que pertenece
+            tipos2[it->second.tipo]++; 
+        }
+
+        // comparamos tipos
+        for (size_t i = 0; i < 6; i++)
+        {
+            if (tipos1[i] != tipos2[i]){ // si uno es diferente no es compatible
+                return false;
+            }
+        }
+        return true;
     }
     if(t1==t2) return true;
     if(t1 == 1 || t2 == 2) return true;
@@ -198,7 +260,8 @@ Expresion Driver::suma(Expresion o1, Expresion o2){
         exp.dir = nuevaTemporal();
         string str1 = ampliar(o1.dir,o1.tipo,exp.tipo);
         string str2 = ampliar(o2.dir, o2.tipo, exp.tipo);
-        //genCode(exp.dir, str1, "+", str2);
+        codigo_intermedio.push_back(nuevaCuadrupla(str1,str2,"+",exp.dir));
+        
     }else{
         error_semantico("Tipos Incompatibles");
     }
@@ -212,11 +275,17 @@ Expresion Driver::suma(Expresion o1, Expresion o2){
 */
 Expresion Driver::mul(Expresion e1, Expresion e2){
     Expresion e;
+<<<<<<< HEAD
     e.tipo = maximo(e1.tipo, e2.tipo);
+=======
+    
+    e.tipo = max(e1.tipo, e2.tipo);
+>>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
     if(e.tipo!=-1){
+        e.dir=nuevaTemporal();
         string alfa1 = ampliar(e1.dir, e1.tipo, e.tipo);
         string alfa2 = ampliar(e2.dir, e2.tipo, e.tipo);
-        //genCode(e.dir, alfa1, "*", alfa2);    --------------------
+        codigo_intermedio.push_back(nuevaCuadrupla(alfa1,alfa2,"*",e.dir));
     }else{
         error_semantico("Los tipos son incompatibles");
     }
@@ -233,9 +302,16 @@ Expresion Driver::resta(Expresion o1, Expresion o2){
 
     if (exp.tipo != -1){                // Si los tipos no coinciden
         exp.dir = nuevaTemporal();
+<<<<<<< HEAD
         string str1 = ampliar(o1.dir,o1.tipo,exp.tipo); // Amplia el tipo de la expresion 1, para que sean compatibles
         string str2 = ampliar(o2.dir, o2.tipo, exp.tipo); // Amplia el tipo de expresion 2, para ser compatible
         //genCode(exp.dir, str1, "-", str2);
+=======
+        string str1 = ampliar(o1.dir,o1.tipo,exp.tipo);
+        string str2 = ampliar(o2.dir, o2.tipo, exp.tipo);
+        codigo_intermedio.push_back(nuevaCuadrupla(str1,str2,"-",exp.dir));
+
+>>>>>>> 53be730708f8a881544b608df1c8fe5a18753c23
     }else{
         error_semantico("Tipos Incompatibles");
     }
@@ -251,9 +327,11 @@ Expresion Driver::division(Expresion e1, Expresion e2){
     Expresion e;
     e.tipo = maximo(e1.tipo, e2.tipo);
     if(e.tipo!=-1){
+        e.dir=nuevaTemporal();
         string alfa1 = ampliar(e1.dir, e1.tipo, e.tipo);
         string alfa2 = ampliar(e2.dir, e2.tipo, e.tipo);
-        //genCode(e.dir, alfa1, "/", alfa2);
+        codigo_intermedio.push_back(nuevaCuadrupla(alfa1,alfa2,"/",e.dir));
+
     }else{
         error_semantico("Los tipos son incompatibles");
     }
@@ -373,7 +451,7 @@ Expresion Driver::distinto(Expresion e1, Expresion e2){
         c.arg1 = e1.dir;
         c.arg2 = e2.dir;
         c.resultado = e.dir;
-        c.operador = "||";
+        c.operador = "!=";
         codigo_intermedio.push_back(c);
     }else{
         error_semantico("Los tipos de los operandos son incompatibles");
@@ -404,10 +482,9 @@ Expresion Driver::negacion(Expresion e1){
 */
 Expresion Driver::identificador(std::string id){
     Expresion e;
-    if(pilaTS.back().find(id) != pilaTS.back().end()){ //Se válida que exista el id
+    if(pilaTS.top()->find(id)){ //Se válida que exista el id
         e.dir = id;
-        map<string, SymTab> TS_top = pilaTS.back();
-        e.tipo = TS_top[id].tipo;  // Se obtiene el tipo del id
+        e.tipo = pilaTS.top()->getType(id);  // Se obtiene el tipo del id
     }else{
         error_semantico("El identificador "+ id + " no fue declarado");
     }
@@ -512,39 +589,40 @@ void Driver::error_semantico(std::string mensaje){
 */
 void Driver::gen_imprimir(string val){
     
-    for(vector<Cuadrupla>::iterator q = codigo_intermedio.begin(); q != codigo_intermedio.end(); q++)
-    {
-        //string operador = *q.operador;
-        int compare = str2int((*q).operador.c_str());
-        switch(compare){
-        case str2int("+"): 
-        case str2int("-"):
-        case str2int("*"):
-        case str2int("/"):
-            cout<<q->resultado<<"="<<q->arg1<<q->operador<<q->arg2<<endl;
-            break;
-        case str2int("if"):
-            cout<<q->operador<<" "<<q->arg1<<" goto "<<q->resultado<<endl;
-            break;
-        case str2int("goto"):
-            cout<<q->operador<<" "<<q->resultado<<endl;
-            break;
-        case str2int("="):
-            cout<<q->resultado<<q->operador<<q->arg1<<endl;
-            break;
-        case str2int("label"):
-            cout<<q->resultado<<":";
-            break;
-        case str2int("(float)"):
-        case str2int("(int)"):
-            cout<<q->resultado<<"="<<q->operador<<q->arg1<<endl;
-        case str2int("scan"):
-            cout<<"scan "<<q->resultado<<endl;
-            break;
-        } 
+    // for(vector<Cuadrupla>::iterator q = codigo_intermedio.begin(); q != codigo_intermedio.end(); q++)
+    // {
+    //     //string operador = *q.operador;
+    //     int compare = str2int((*q).operador.c_str());
+    //     switch(compare){
+    //     case str2int("+"): 
+    //     case str2int("-"):
+    //     case str2int("*"):
+    //     case str2int("/"):
+    //         cout<<q->resultado<<"="<<q->arg1<<q->operador<<q->arg2<<endl;
+    //         break;
+    //     case str2int("if"):
+    //         cout<<q->operador<<" "<<q->arg1<<" goto "<<q->resultado<<endl;
+    //         break;
+    //     case str2int("goto"):
+    //         cout<<q->operador<<" "<<q->resultado<<endl;
+    //         break;
+    //     case str2int("="):
+    //         cout<<q->resultado<<q->operador<<q->arg1<<endl;
+    //         break;
+    //     case str2int("label"):
+    //         cout<<q->resultado<<":";
+    //         break;
+    //     case str2int("(float)"):
+    //     case str2int("(int)"):
+    //         cout<<q->resultado<<"="<<q->operador<<q->arg1<<endl;
+    //     case str2int("scan"):
+    //         cout<<"scan "<<q->resultado<<endl;
+    //         break;
+    //     } 
 
-    }
-    cout<<endl;    
+    // }
+    // cout<<endl;    
+
 }
 
 /* Genrar lectura
