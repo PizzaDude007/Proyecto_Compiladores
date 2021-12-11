@@ -6,11 +6,11 @@ _Se plantea la segunda parte del proyecto para la materia de compiladores el cua
 
 ## Facultad de Ingeniería
 
-# Compiladores
-# Profesor
+### Compiladores
+#### Profesor
 * **Ing. Mercado Martinez Adrian Ulises** 
 
-## Alumnos ✒️
+#### Alumnos ✒️
 
 _A continuacion se listan los integrantes del equipo_
 
@@ -18,5 +18,3 @@ _A continuacion se listan los integrantes del equipo_
 * **Ibañez Guzmán Osvaldo** - *osva552920@gmail.com* - [OsvaldoIG](https://github.com/OsvaldoIG)
 * **Martínez Vazquez Brayan Alexis** - *brayanlexis.p6@gmail.com* - [BralexMtz](https://github.com/BralexMtz)
 * **van der Werff Vargas Pieter Alexander** - *piet.pizza@gmail.com* - [PizzaDude007](https://github.com/PizzaDude007)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
