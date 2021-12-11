@@ -7,21 +7,25 @@ using namespace std;
 #include "Lexer.h"
 
 %}
-
+/*  Definicion de formato de archivo a generar */
 %option yyclass = "Lexer"
 %option c++
 %option outfile = "Lexer.cpp"
 %option case-insensitive
 
 
-
-ESP ([ \t\n\r])+
+/*  Expresiones Regulares, para los diferentes tipos de datos   */
+ESP ([ \t\n\r\v])+
 ID [a-zA-Z_]([a-zA-Z0-9_])*
 ENTEROS ([0-9])+
 FLOTANTES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?f
 CADENA (\")([\x20\x21\x23-\x7F])*(\")
-CARACTER (\')([\x20\x21\x23-\x7F\t\n\r])(\')
+CARACTER (\')([\x20\x21\x23-\x7F\t\n\r\v])(\')
 DOBLES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?
+
+/*  Asignacion de tokens usados en la gramatica 
+    y Variables de retorno para expresiones regulares 
+*/
 %%
 
 "char" { return CHAR; }
