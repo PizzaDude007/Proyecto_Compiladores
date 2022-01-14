@@ -18,7 +18,35 @@ struct Cuadrupla{
 //class SymTab; 
 struct Expresion{
     std::string dir;
+    std::string id;
+    vector<int>* lista;
     int tipo; 
+    Expresion(){
+
+    }
+    Expresion(std::string dir, std::string id, vector<int>* lista, int tipo ){
+		this->dir = dir;
+		this->id = id;
+		this->lista = lista;
+		this->tipo = tipo;
+	}
+    Expresion(int tipo,std::string dir ){
+		this->id = id;
+		this->tipo = tipo;
+	}
+    Expresion(std::string id, int tipo ){
+		this->id = id;
+		this->tipo = tipo;
+	}
+    Expresion(std::string id){
+		this->id = id;
+	}
+    Expresion(int tipo){
+		this->tipo = tipo;
+	}
+    Expresion(vector<int>* lista){
+		this->lista = lista;
+	}
 }; 
 
 struct Numero{
@@ -45,8 +73,13 @@ private:
     std::stack<int> pilaDir; // Pila para dir cuando cambia de contexto
     std::stack<int> pilaTemp; // Pila para guardar temporales
 
+    
+    
 
     
+    std::vector<Cuadrupla> codigo_intermedio;
+    //Generador de codigo final
+public:
     int tipoRetorno;
     bool tieneRetorno;
     int dir;
@@ -57,10 +90,6 @@ private:
     int numLabel;
     int contType;
 
-    
-    std::vector<Cuadrupla> codigo_intermedio;
-    //Generador de codigo final
-public:
     Driver();
     ~Driver();
     //Funciones para tabla de tipos
@@ -118,7 +147,11 @@ public:
 
     struct Cuadrupla nuevaCuadrupla(string arg1, string arg2, string operador, string resultado);
     //constexpr unsigned int str2int(const char* str, int h = 0);
-
+    PilaTS Driver::getPilaTS() {return pilaTS;};
+    int Driver::calcularTamanio(SymTab* ts);
+    int Driver::addTipo(string nombre,int tam,SymTab* ts);
+    TypeTab Driver::getTypeTab(){return Ttipos;};
+    void Driver::addCadena(string cadena);
 };
 
 

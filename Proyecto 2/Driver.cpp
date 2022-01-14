@@ -38,9 +38,7 @@ void Driver::crear_ambito(){
     pilaDir.push(dir);
     dir = 0;
     pilaTemp.push(numTemporales);
-    numTemporales = 0;
-    delete ts;
-    
+    numTemporales = 0;    
 }
 
 void Driver::destruir_ambito(){
@@ -48,6 +46,7 @@ void Driver::destruir_ambito(){
     
     // se elimina la TS 
     pilaTS.pop();
+    
     // se recupera el dir
     dir= pilaDir.top();
     pilaDir.pop();
@@ -520,6 +519,10 @@ struct Cuadrupla Driver::nuevaCuadrupla(string arg1, string arg2, string operado
     temp.operador = operador;
     temp.resultado = resultado;
     return temp;
+}
+
+int Driver::calcularTamanio(SymTab){
+
 }
 
 

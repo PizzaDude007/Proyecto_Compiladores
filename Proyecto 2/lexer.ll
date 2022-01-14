@@ -51,12 +51,15 @@ DOBLES ([0-9])*(\.)([0-9])+([Ee]([+-])?([0-9])+)?
 "-" { return MENOS; }
 "*" { return MULTIPLICACION; }
 "/" { return DIVISION; }
+"!=" { return DIFERENTE; }
+
+"!" { return NEGACION}
 "||" { return DISYUNCION; }
 "&&" { return CONJUNCION; }
 "<" { return MENOR; }
 ">" { return MAYOR; }
 "==" {return IGUALDAD; }
-"!=" { return DIFERENTE; }
+
 ">=" { return MAYOR_IGUAL; }
 "<=" { return MENOR_IGUAL; }
 
